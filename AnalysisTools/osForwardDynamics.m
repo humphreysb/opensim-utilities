@@ -1,7 +1,7 @@
 function [tool,model]=osForwardDynamics(model,options)
 
 
-%osIForward - Create an OpenSim Forward Dynamics Tool Object
+%osForwardDynamics - Create an OpenSim Forward Dynamics Tool Object
 %
 %tool=osForwardDynamics(model,options)
 %
@@ -18,25 +18,25 @@ function [tool,model]=osForwardDynamics(model,options)
 %                   tool.run();
 %
 %               model - a reference to the model.  Needed if the model
-%                   is opened from a file.
+%                   is opened from a file.  THIS OUTPUT SHOULD BE RETURNED.
+%
+%       If tool.run() crashes, it is probably because you did not return
+%           model as an output argument from this function.  you should
+%           always return it.
 %
 %Example of calling this function with some options:
 %   import org.opensim.modeling.*
-%   model='Arnold+50Lower_LumbarUpper_bar4x_SP125.osim';
-%   options.setCoordinatesFileName='HULK_S10_SQP_L125_R01_Motion.mot';
-%   options.setExcludedForces=ArrayStr('Muscles'); 
-%   tool=osForwardDynamics(model,options)
+%   model='pendulumWithController.osim';
+%   options.setControlsFileName='TonPendtrols.sto';
+%   options.setFinalTime=tStop;
+%   options.setInitialTime=0;
+%   options.setName='RunWithPendTorques'
 %
-%Example Options (note that you normally use options.setStartTime(0);)
-%   options.setCoordinatesFileName='MotFileToBeUsed.mot';
-%   options.setStartTime=0;
-%   options.setFinalTime=1;
-%   options.setSolveForEquilibrium=false;
-%   options.setName='InverseDynamicsRun';
-%   options.setExcludedForces=(ArrayStr('Muscles')); %Turn off all muscles
-%   options.setUseVisualizer=false;
-%   options.setOutputGenForceFileName='NameofStoFile';   %Set the name of
-%           the sto results file.
+%  to get available Options fo the following:
+%     On MATLAB cmd line:
+%           import org.opensim.modeling.*
+%           tool=ForwardTool();
+%       Then use tab completeion: tool.
 %
 %
 %Comments on the Forward Tool:
@@ -48,6 +48,13 @@ function [tool,model]=osForwardDynamics(model,options)
 %Brad Humphreys 2014-12-26 v1.0
 %---------------------------------------------
 
+%---------------------------------------------
+%Brad Humphreys 2015-9-11 v1.0
+% works with OpenSim 3.3
+%---------------------------------------------
+
+
+
 import org.opensim.modeling.*
 
 
@@ -55,8 +62,8 @@ if ischar(model)  % Either Model Name or xml file is provided
     [pathstr,name,ext]=fileparts(model);
     if strcmp(ext,'.osim')
         model = Model(model);
-        tool = ForwardDynamicsTool();
-        tool.setModel(osimModel);
+        tool = ForwardTool();
+        tool.setModel(model);
     elseif strcmp(ext,'.xml')
         tool = ForwardDynamicsTool(model);
     else
@@ -78,4 +85,4 @@ if nargin>1
 end
 
 
-
+aaaa=1;
